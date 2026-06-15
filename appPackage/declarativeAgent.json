@@ -1,0 +1,34 @@
+{
+    "version": "v1.6",
+    "name": "Sales Dashboard${{APP_NAME_SUFFIX}}",
+    "description": "An interactive sales analytics agent that answers pipeline and performance questions and renders a rich, interactive sales dashboard inline in Microsoft 365 Copilot.",
+    "instructions": "$[file('instruction.txt')]",
+    "conversation_starters": [
+        {
+            "title": "Sales dashboard",
+            "text": "Show me the sales dashboard"
+        },
+        {
+            "title": "Pipeline by stage",
+            "text": "What does our pipeline look like by stage this quarter?"
+        },
+        {
+            "title": "Deals at risk",
+            "text": "Which late-stage deals look at risk and why?"
+        },
+        {
+            "title": "Rep leaderboard",
+            "text": "Who are our top performing reps?"
+        },
+        {
+            "title": "Regional view",
+            "text": "Show me sales performance for EMEA"
+        }
+    ],
+    "actions": [
+        {
+            "id": "salesMcp",
+            "file": "ai-plugin.json"
+        }
+    ]
+}

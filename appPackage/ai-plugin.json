@@ -1,0 +1,214 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.4/schema.json",
+    "schema_version": "v2.4",
+    "name_for_human": "Sales Dashboard${{APP_NAME_SUFFIX}}",
+    "description_for_human": "Interactive sales analytics for Microsoft 365 Copilot: pipeline KPIs, deal and rep drill-downs, and a rich dashboard rendered inline in chat.",
+    "namespace": "salesdashboard",
+    "functions": [
+        {
+            "name": "show_sales_dashboard",
+            "description": "Display the interactive sales dashboard with KPIs (open pipeline, weighted pipeline, closed-won, win rate, quota attainment), a pipeline funnel by stage, top open deals, the rep leaderboard and a regional breakdown. Optional filters: period ('this_quarter', 'this_year', 'last_quarter', 'all') and region ('AMER', 'EMEA', 'APAC', 'LATAM')."
+        },
+        {
+            "name": "list_deals",
+            "description": "Show a filtered list of deals in the dashboard. Optional filters: stage (e.g. 'Negotiation', 'Closed Won'), region, rep (name or id), min_amount (numeric), and search (matches deal name, account or product)."
+        },
+        {
+            "name": "show_deal_details",
+            "description": "Drill into a single deal and render its detail card: amount, stage, probability, owner, target close date, next step and other deals at the same account. Provide deal_id (e.g. 'D-1009') or part of the deal name."
+        },
+        {
+            "name": "show_rep_details",
+            "description": "Drill into a single sales representative and render their scorecard: quota attainment, closed-won, open pipeline, win rate and their deals. Provide rep as a name (e.g. 'Sofia Rossi') or id (e.g. 'r3')."
+        },
+        {
+            "name": "get_sales_summary",
+            "description": "Return headline sales metrics as data only (no widget) for quick natural-language answers such as 'what's our win rate?' or 'how much pipeline is open in EMEA?'. Optional filters: period and region."
+        }
+    ],
+    "runtimes": [
+        {
+            "type": "RemoteMCPServer",
+            "spec": {
+                "url": "${{MCP_ENDPOINT_URL}}",
+                "x-mcp_tool_description": {
+                    "tools": [
+                        {
+                            "name": "show_sales_dashboard",
+                            "description": "Display the interactive sales dashboard with KPIs (open pipeline, weighted pipeline, closed-won, win rate, quota attainment), a pipeline funnel by stage, top open deals, the rep leaderboard and a regional breakdown. Optional filters: period ('this_quarter', 'this_year', 'last_quarter', 'all') and region ('AMER', 'EMEA', 'APAC', 'LATAM').",
+                            "inputSchema": {
+                                "properties": {
+                                    "period": {
+                                        "default": "",
+                                        "title": "Period",
+                                        "type": "string"
+                                    },
+                                    "region": {
+                                        "default": "",
+                                        "title": "Region",
+                                        "type": "string"
+                                    }
+                                },
+                                "title": "show_sales_dashboardArguments",
+                                "type": "object"
+                            },
+                            "annotations": {
+                                "readOnlyHint": true
+                            },
+                            "execution": {
+                                "taskSupport": "forbidden"
+                            },
+                            "_meta": {
+                                "ui": {
+                                    "resourceUri": "ui://sales-dashboard/app.html"
+                                },
+                                "ui/resourceUri": "ui://sales-dashboard/app.html"
+                            }
+                        },
+                        {
+                            "name": "list_deals",
+                            "description": "Show a filtered list of deals in the dashboard. Optional filters: stage (e.g. 'Negotiation', 'Closed Won'), region, rep (name or id), min_amount (numeric), and search (matches deal name, account or product).",
+                            "inputSchema": {
+                                "properties": {
+                                    "stage": {
+                                        "default": "",
+                                        "title": "Stage",
+                                        "type": "string"
+                                    },
+                                    "region": {
+                                        "default": "",
+                                        "title": "Region",
+                                        "type": "string"
+                                    },
+                                    "rep": {
+                                        "default": "",
+                                        "title": "Rep",
+                                        "type": "string"
+                                    },
+                                    "min_amount": {
+                                        "default": "",
+                                        "title": "Min Amount",
+                                        "type": "string"
+                                    },
+                                    "search": {
+                                        "default": "",
+                                        "title": "Search",
+                                        "type": "string"
+                                    }
+                                },
+                                "title": "list_dealsArguments",
+                                "type": "object"
+                            },
+                            "annotations": {
+                                "readOnlyHint": true
+                            },
+                            "execution": {
+                                "taskSupport": "forbidden"
+                            },
+                            "_meta": {
+                                "ui": {
+                                    "resourceUri": "ui://sales-dashboard/app.html"
+                                },
+                                "ui/resourceUri": "ui://sales-dashboard/app.html"
+                            }
+                        },
+                        {
+                            "name": "show_deal_details",
+                            "description": "Drill into a single deal and render its detail card: amount, stage, probability, owner, target close date, next step and other deals at the same account. Provide deal_id (e.g. 'D-1009') or part of the deal name.",
+                            "inputSchema": {
+                                "properties": {
+                                    "deal_id": {
+                                        "title": "Deal Id",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "deal_id"
+                                ],
+                                "title": "show_deal_detailsArguments",
+                                "type": "object"
+                            },
+                            "annotations": {
+                                "readOnlyHint": true
+                            },
+                            "execution": {
+                                "taskSupport": "forbidden"
+                            },
+                            "_meta": {
+                                "ui": {
+                                    "resourceUri": "ui://sales-dashboard/app.html"
+                                },
+                                "ui/resourceUri": "ui://sales-dashboard/app.html"
+                            }
+                        },
+                        {
+                            "name": "show_rep_details",
+                            "description": "Drill into a single sales representative and render their scorecard: quota attainment, closed-won, open pipeline, win rate and their deals. Provide rep as a name (e.g. 'Sofia Rossi') or id (e.g. 'r3').",
+                            "inputSchema": {
+                                "properties": {
+                                    "rep": {
+                                        "title": "Rep",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "rep"
+                                ],
+                                "title": "show_rep_detailsArguments",
+                                "type": "object"
+                            },
+                            "annotations": {
+                                "readOnlyHint": true
+                            },
+                            "execution": {
+                                "taskSupport": "forbidden"
+                            },
+                            "_meta": {
+                                "ui": {
+                                    "resourceUri": "ui://sales-dashboard/app.html"
+                                },
+                                "ui/resourceUri": "ui://sales-dashboard/app.html"
+                            }
+                        },
+                        {
+                            "name": "get_sales_summary",
+                            "description": "Return headline sales metrics as data only (no widget) for quick natural-language answers such as 'what's our win rate?' or 'how much pipeline is open in EMEA?'. Optional filters: period and region.",
+                            "inputSchema": {
+                                "properties": {
+                                    "period": {
+                                        "default": "",
+                                        "title": "Period",
+                                        "type": "string"
+                                    },
+                                    "region": {
+                                        "default": "",
+                                        "title": "Region",
+                                        "type": "string"
+                                    }
+                                },
+                                "title": "get_sales_summaryArguments",
+                                "type": "object"
+                            },
+                            "annotations": {
+                                "readOnlyHint": true
+                            },
+                            "execution": {
+                                "taskSupport": "forbidden"
+                            }
+                        }
+                    ]
+                }
+            },
+            "run_for_functions": [
+                "show_sales_dashboard",
+                "list_deals",
+                "show_deal_details",
+                "show_rep_details",
+                "get_sales_summary"
+            ],
+            "auth": {
+                "type": "None"
+            }
+        }
+    ]
+}

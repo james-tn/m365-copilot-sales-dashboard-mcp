@@ -1,0 +1,39 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.24/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.24",
+    "version": "1.0.0",
+    "id": "${{TEAMS_APP_ID}}",
+    "developer": {
+        "name": "Sales Dashboard Demo",
+        "websiteUrl": "https://www.example.com",
+        "privacyUrl": "https://www.example.com/privacy",
+        "termsOfUseUrl": "https://www.example.com/termsofuse"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Sales Dashboard${{APP_NAME_SUFFIX}}",
+        "full": "Sales Dashboard Agent for Microsoft 365 Copilot"
+    },
+    "description": {
+        "short": "Interactive sales pipeline dashboard in Copilot.",
+        "full": "A declarative agent that answers sales pipeline and performance questions and renders a rich, interactive sales dashboard inline in Microsoft 365 Copilot, powered by an MCP Apps server."
+    },
+    "accentColor": "#2B6CB0",
+    "composeExtensions": [],
+    "copilotAgents": {
+        "declarativeAgents": [
+            {
+                "id": "declarativeAgent",
+                "file": "declarativeAgent.json"
+            }
+        ]
+    },
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": []
+}
