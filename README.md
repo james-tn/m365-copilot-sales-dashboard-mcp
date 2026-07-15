@@ -13,6 +13,11 @@ widget calls back into the same MCP tools to drill down.
 > **New here? Follow the [step-by-step guide](docs/GUIDE.md)** — a complete
 > walkthrough from an empty folder to a working agent in Copilot, plus
 > production authentication, marketplace publishing, and troubleshooting.
+>
+> **Designing your own?** The [design guide](docs/DESIGN_GUIDE.md) is a repeatable
+> process — from business KPIs and metrics, through UI and tool design, to the
+> interaction model (silent drill-down vs. conversation vs. context updates),
+> context-aware operations, and authentication.
 
 ```mermaid
 flowchart LR
