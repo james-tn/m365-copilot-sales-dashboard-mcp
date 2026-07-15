@@ -25,6 +25,44 @@ flowchart LR
     DA -->|grounded answer| U
 ```
 
+## See it in action
+
+Ask in plain language and the agent calls an MCP tool that returns both a grounded
+answer **and** a live, interactive dashboard rendered inline in Copilot chat.
+
+> 💬 *"Show me the sales dashboard"*
+
+![Sales dashboard — KPIs, pipeline funnel by stage and the rep leaderboard](docs/images/dashboard.png)
+
+### Intelligent, conversational drill-downs
+
+The agent understands follow-up questions, and every click calls back into the same
+MCP tools — so the conversation and the UI stay in sync. No dashboards to configure,
+just ask.
+
+| 💬 *"Which late-stage deals are at risk?"* |
+| :-- |
+| ![Filtered deal list showing deals in the Negotiation stage](docs/images/deals.png) |
+
+| 💬 *"How is Sofia performing?"* | 💬 *"Open the Fabrikam – Premium Support deal"* |
+| :-- | :-- |
+| ![Rep scorecard: quota attainment, pipeline, win rate and their deals](docs/images/rep.png) | ![Deal detail card with owner, next step and other deals at the account](docs/images/deal.png) |
+
+What makes it *intelligent*:
+
+* **Natural-language understanding** — free-form questions map to the right tool and
+  filters (period, region, stage, rep, amount, search).
+* **Grounded answers** — each tool returns a short text summary Copilot reads aloud,
+  alongside the structured data behind the widget.
+* **Interactive follow-through** — clicking a deal, rep, stage or region calls the MCP
+  tools again to drill down, and the "Try asking" chips seed the next question.
+* **Quick facts without a widget** — `get_sales_summary` returns data only for answers
+  like *"what's our win rate in EMEA?"*.
+
+> The screenshots above are rendered from the actual widget
+> (`server/sales_mcp/web/widget.html`) using the demo dataset in
+> `server/sales_mcp/data.py`.
+
 ## How it works (MCP Apps)
 
 * Each MCP **tool** (`show_sales_dashboard`, `list_deals`, `show_deal_details`,
