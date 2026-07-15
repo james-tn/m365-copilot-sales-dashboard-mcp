@@ -325,17 +325,20 @@ deliberately.
   context embedded in the text. E.g. a "Draft email" button on the deal card
   sends: *"Draft a follow-up email for deal D-1041 (Fabrikam – Premium Support,
   Negotiation, $450k, owner Sofia Rossi)."* The model now has everything in
-  `content`-equivalent text. This repo's `PromptChip` is the pattern; extend it to
-  interpolate the selected entity.
+  `content`-equivalent text. **This repo already does this**: the `DealDetail` and
+  `RepDetail` "Ask the agent" chips interpolate the on-screen entity into the
+  prompt (see `PromptChip` usage in `views/DealDetail.tsx`).
 - **B. Push ambient state with `updateModelContext` (channel 3).** On every
   view/filter change, send a **text** summary of current UI state
   ("User is viewing deal D-1041…; filter: stage=Negotiation"). The host makes it
   available on the *next* user turn without triggering a response; each call
   overwrites the previous. Use **text `content`** (not `structuredContent`) so it's
-  actually model-visible under our assumption. **Note:** this repo does **not**
-  implement this today — `McpBridge` exposes only `callTool` + `sendPrompt`. Adding
-  a `syncModelContext(state)` call in `App.tsx`'s `navigate`/`setOverride` flow is
-  the clean way to add awareness.
+  actually model-visible under our assumption. **This repo implements this**:
+  `McpBridge.updateModelContext` wraps `app.updateModelContext` (guarded with
+  feature-detection + try/catch so it degrades to a no-op on hosts that don't
+  support it), and `App.tsx` derives a summary via `describeState(data)` and
+  pushes it from an effect on *every* view change — whether the change came from a
+  host/model tool call or a silent widget-initiated drill-down.
 - **C. Re-fetch on demand.** For "predefined action" buttons, fire a
   `sendMessage` whose text names the action + entity; the model then calls the
   right tool (whose `content` grounds the answer). Good when the action maps
@@ -346,9 +349,9 @@ deliberately.
 Combine **A for actions** (deterministic, no dependence on host context handling)
 with **B for passive awareness** (so free-typed follow-ups work). Avoid relying on
 the host to leak `structuredContent` — it's host-specific and, per our assumption,
-not to be counted on.
+not to be counted on. This repo uses exactly that combination.
 
-**Worked flow (target design):**
+**Worked flow (as implemented):**
 
 | User action | Channel | What the model sees |
 | :-- | :-- | :-- |

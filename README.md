@@ -61,6 +61,9 @@ What makes it *intelligent*:
   alongside the structured data behind the widget.
 * **Interactive follow-through** — clicking a deal, rep, stage or region calls the MCP
   tools again to drill down, and the "Try asking" chips seed the next question.
+* **Context-aware follow-ups** — as you drill down or filter, the widget pushes a short
+  summary of what's on screen into the agent's model context, so a free-typed question
+  like *"draft a follow-up email for this deal"* knows which deal you're looking at.
 * **Quick facts without a widget** — `get_sales_summary` returns data only for answers
   like *"what's our win rate in EMEA?"*.
 

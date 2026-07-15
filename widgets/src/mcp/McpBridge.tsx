@@ -19,6 +19,7 @@ interface BridgeValue {
   callTool: (name: string, args?: Record<string, unknown>) => Promise<ToolData | null>;
   toggleFullscreen: () => void;
   sendPrompt: (prompt: string) => void;
+  updateModelContext: (text: string) => void;
   notifyHeight: () => void;
 }
 
@@ -179,6 +180,28 @@ export function McpBridgeProvider({
     [app, isConnected],
   );
 
+  // Push a text summary of the current UI state into the host's model context so
+  // free-typed follow-up questions after a silent drill-down are understood. Per
+  // the MCP Apps spec this does NOT trigger a model turn; the host makes it
+  // available on the next user message, and each call overwrites the previous.
+  // Only `content` (text) is model-visible, so we never send structuredContent.
+  const updateModelContext = useCallback(
+    (text: string) => {
+      if (!text) return;
+      const a = app as unknown as Record<string, any> | null;
+      try {
+        if (a && isConnected && typeof a.updateModelContext === "function") {
+          a.updateModelContext({ content: [{ type: "text", text }] })?.catch?.(() => {
+            /* host rejected or unsupported — ignore */
+          });
+        }
+      } catch {
+        /* not supported in this host — ignore */
+      }
+    },
+    [app, isConnected],
+  );
+
   const canExpand =
     !!(app && typeof (app as Record<string, any>).requestDisplayMode === "function") ||
     !!(window as Record<string, any>).openai?.requestDisplayMode;
@@ -218,6 +241,7 @@ export function McpBridgeProvider({
         callTool,
         toggleFullscreen,
         sendPrompt,
+        updateModelContext,
         notifyHeight,
       }}
     >
