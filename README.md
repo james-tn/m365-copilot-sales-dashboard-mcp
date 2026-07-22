@@ -71,6 +71,87 @@ What makes it *intelligent*:
 > (`server/sales_mcp/web/widget.html`) using the demo dataset in
 > `server/sales_mcp/data.py`.
 
+## Microsoft 365 context, for free — no Work IQ required
+
+The agent declares a handful of built-in **capabilities** in
+`appPackage/declarativeAgent.json`. With just those lines, Copilot grounds the
+*same* agent in the signed-in user's Microsoft 365 — their email, meetings,
+colleagues and org, Teams messages, and SharePoint/OneDrive files, plus web
+search — with **no extra integration and no Work IQ**:
+
+```jsonc
+"capabilities": [
+  { "name": "People" },
+  { "name": "Email" },
+  { "name": "Meetings" },
+  { "name": "TeamsMessages" },
+  { "name": "OneDriveAndSharePoint" },
+  { "name": "WebSearch" },
+  { "name": "GraphConnectors" },
+  // schema v1.8 — let the agent *act*, not just read:
+  { "name": "EmailActions" },
+  { "name": "MeetingActions" }
+]
+```
+
+That turns the Sales Dashboard from a data widget into a personal briefing tool.
+The MCP tools supply the pipeline; the M365 context supplies the *who, when and
+what next*:
+
+| Ask the agent… | Sales MCP provides | Microsoft 365 context adds |
+|---|---|---|
+| *"Catch me up on Contoso before my call"* | Open deals, stage, next steps, owner | Your recent **emails** & **meetings** with Contoso, and **who** on your team last touched it |
+| *"Prep me for today's customer meetings"* | The deals tied to each account | Today's **calendar** + the latest **email thread** and **proposal deck** (SharePoint/OneDrive) per account |
+| *"Which at-risk deals do I have meetings with this week?"* | At-risk deals (stage, probability, close date) | Cross-referenced against your **calendar** |
+| *"Draft a follow-up to the Fabrikam champion"* | The deal's next step & owner | The real **email thread** with that contact, for names, tone and open points |
+| *"Who internally knows the Northwind account?"* | The Northwind deal & rep | **People** + recent **Teams**/**email** activity on the account |
+| *"Any news on Northwind before the renewal?"* | The renewal deal context | **Web search** for recent public coverage |
+| *"Help me coach Sofia"* | Sofia's scorecard (quota, win rate, deals) | Your recent **Teams**/**email** with Sofia and shared **meetings** |
+
+> All of the grounding above is **read-only**, under the signed-in user's
+> existing permissions — the agent can't see anything the user can't, and it
+> comes purely from the capability declarations (no code, no Work IQ). This
+> package also declares the `EmailActions` and `MeetingActions` capabilities
+> (declarative-agent schema **v1.8**), so the agent can *act* too — draft and
+> send that follow-up email, or schedule the deal review — with the user
+> confirming before anything is sent or booked. Here's what that looks like
+> end to end.
+
+### From insight to action — a Monday deal-triage, end to end
+
+Once the agent is deployed in Copilot, a single conversation flows from pipeline
+data → M365 context → real action, without ever leaving the chat:
+
+1. **"Which late-stage deals look at risk this week?"**
+   The `list_deals` MCP tool renders the dashboard and flags the at-risk deals.
+   The agent then checks your **calendar** and notices you have a call with
+   *Contoso* on Thursday.
+2. **"Prep me for the Contoso call."**
+   It blends the Contoso deal (`show_deal_details`) with your recent **email
+   thread**, the **last meeting**, the latest **proposal deck** from
+   **SharePoint/OneDrive**, and the **account team** (People) — a one-screen brief.
+3. **"Draft the follow-up to their champion and send it."**
+   Using **`EmailActions`**, it drafts a reply grounded in the real thread and the
+   deal's next step, shows it to you, and — once you confirm — **sends it**.
+4. **"Book a 30-minute review with our team next week."**
+   Using **`MeetingActions`**, it proposes a time against your free/busy, invites
+   the account team from **People**, and **schedules the meeting** on your confirm.
+
+No copy-paste into Outlook, no switching apps — the same agent reads the context
+and takes the action. A few more action-oriented asks:
+
+| Ask the agent… | Context it grounds on | Action it takes |
+|---|---|---|
+| *"Draft and send a follow-up to the Fabrikam champion"* | The real email thread + the deal's next step | Sends the email on confirm — **EmailActions** |
+| *"Set up a 30-min review for the Contoso deal next week"* | The account team (People) + your calendar | Books the meeting on confirm — **MeetingActions** |
+| *"Reply to the champion and propose two times to meet"* | The latest thread + your free/busy | Drafts the reply *and* proposes slots — **EmailActions** + **MeetingActions** |
+| *"Email my manager a summary of my top 3 at-risk deals"* | Pipeline (MCP) + your manager (People) | Composes & sends the summary — **EmailActions** |
+
+> The agent always shows the draft (recipients, subject, body) or the proposed
+> meeting (attendees, time, agenda) and waits for your **confirmation** before
+> anything is sent or scheduled — and only ever acts within your own mailbox and
+> calendar permissions.
+
 ## How it works (MCP Apps)
 
 * Each MCP **tool** (`show_sales_dashboard`, `list_deals`, `show_deal_details`,

@@ -1,5 +1,5 @@
 {
-    "version": "v1.6",
+    "version": "v1.8",
     "name": "Sales Dashboard${{APP_NAME_SUFFIX}}",
     "description": "An interactive sales analytics agent that answers pipeline and performance questions and renders a rich, interactive sales dashboard inline in Microsoft 365 Copilot.",
     "instructions": "$[file('instruction.txt')]",
@@ -23,6 +23,22 @@
         {
             "title": "Regional view",
             "text": "Show me sales performance for EMEA"
+        },
+        {
+            "title": "Catch me up on an account",
+            "text": "Catch me up on Contoso — combine our pipeline with my recent emails and meetings"
+        },
+        {
+            "title": "Prep for a customer meeting",
+            "text": "Prep me for my upcoming meetings with accounts that have deals at risk"
+        },
+        {
+            "title": "Draft a follow-up email",
+            "text": "Draft a follow-up email to the champion on my top at-risk deal, grounded in our recent thread"
+        },
+        {
+            "title": "Schedule a deal review",
+            "text": "Schedule a 30-minute review meeting next week for my biggest open deal"
         }
     ],
     "actions": [
@@ -30,5 +46,16 @@
             "id": "salesMcp",
             "file": "ai-plugin.json"
         }
+    ],
+    "capabilities": [
+        { "name": "People" },
+        { "name": "Email" },
+        { "name": "Meetings" },
+        { "name": "TeamsMessages" },
+        { "name": "OneDriveAndSharePoint" },
+        { "name": "WebSearch" },
+        { "name": "GraphConnectors" },
+        { "name": "EmailActions" },
+        { "name": "MeetingActions" }
     ]
 }
